@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\TagihanCollection;
 use App\Http\Resources\TagihanResource;
+use App\Filters\TagihanFilter;
 
 class TagihanController extends Controller
 {
@@ -15,9 +16,16 @@ class TagihanController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return new TagihanCollection(Tagihan::all());
+        $filter = new TagihanFilter();
+        $queryItems = $filter->transform($request);
+
+        if (count($queryItems) == 0) {
+            return new TagihanCollection(Tagihan::all());
+        } else {
+            return new TagihanCollection(Tagihan::where($queryItems)->get());
+        }
     }
 
     /**

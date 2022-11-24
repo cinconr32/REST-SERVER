@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CustomerCollection;
 use App\Http\Resources\CustomerResource;
+use App\Filters\CustomerFilter;
 
 class CustomerController extends Controller
 {
@@ -15,9 +16,16 @@ class CustomerController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return new CustomerCollection(Customer::all());
+        $filter = new CustomerFilter();
+        $queryItems = $filter->transform($request);
+
+        if (count($queryItems) == 0) {
+            return new CustomerCollection(Customer::all());
+        } else {
+            return new CustomerCollection(Customer::where($queryItems)->get());
+        }
     }
 
     /**

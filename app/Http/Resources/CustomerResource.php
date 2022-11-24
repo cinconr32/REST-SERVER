@@ -20,7 +20,8 @@ class CustomerResource extends JsonResource
             'NIK' => $this->nik,
             'jenisKelamin' => $this->jeniskelamin,
             'alamat' => $this->alamat,
-            'noTelp' => $this->no_telp
+            'noTelp' => $this->no_telp,
+            'tagihan' => TagihanResource::collection($this->whenLoaded('tagihan'))
         ];
     }
 }

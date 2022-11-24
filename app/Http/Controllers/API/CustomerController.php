@@ -18,13 +18,36 @@ class CustomerController extends Controller
      */
     public function index(Request $request)
     {
-        $filter = new CustomerFilter();
-        $queryItems = $filter->transform($request);
+        // $filter = new CustomerFilter();
+        // $filterItems = $filter->transform($request);
 
-        if (count($queryItems) == 0) {
-            return new CustomerCollection(Customer::all());
+        // $includeTagihan = $request->query('includeTagihan');
+
+        // $customers = Customer::where($filterItems)->get();
+
+        // if ( $includeTagihan ) {
+        //     $customers = $customers->with('tagihan');
+        // }
+
+        // return new CustomerCollection($customers);
+
+        $filter = new CustomerFilter();
+        $filterItems = $filter->transform($request);
+        $includeTagihan = $request->query('includeTagihan');
+
+        if (count($filterItems) == 0) {
+            if ( $includeTagihan ) {
+                return new CustomerCollection(Customer::with(['tagihan'])->get());
+            } else {
+                return new CustomerCollection(Customer::all());
+            }
         } else {
-            return new CustomerCollection(Customer::where($queryItems)->get());
+            if ( $includeTagihan ) {
+                return new CustomerCollection(Customer::where($filterItems)->with(['tagihan'])->get());
+            }
+            else {
+                return new CustomerCollection(Customer::where($filterItems)->get());
+            }
         }
     }
 

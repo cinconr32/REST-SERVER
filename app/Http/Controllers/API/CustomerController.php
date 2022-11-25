@@ -4,10 +4,12 @@ namespace App\Http\Controllers\API;
 
 use App\Models\Customer;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use App\Http\Resources\CustomerCollection;
-use App\Http\Resources\CustomerResource;
 use App\Filters\CustomerFilter;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\CustomerResource;
+use App\Http\Resources\CustomerCollection;
+use App\Http\Requests\StoreCustomerRequest;
+use App\Http\Requests\UpdateCustomerRequest;
 
 class CustomerController extends Controller
 {
@@ -18,19 +20,6 @@ class CustomerController extends Controller
      */
     public function index(Request $request)
     {
-        // $filter = new CustomerFilter();
-        // $filterItems = $filter->transform($request);
-
-        // $includeTagihan = $request->query('includeTagihan');
-
-        // $customers = Customer::where($filterItems)->get();
-
-        // if ( $includeTagihan ) {
-        //     $customers = $customers->with('tagihan');
-        // }
-
-        // return new CustomerCollection($customers);
-
         $filter = new CustomerFilter();
         $filterItems = $filter->transform($request);
         $includeTagihan = $request->query('includeTagihan');
@@ -57,9 +46,9 @@ class CustomerController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreCustomerRequest $request)
     {
-        //
+        return new CustomerResource(Customer::create($request->all()));
     }
 
     /**
@@ -70,6 +59,12 @@ class CustomerController extends Controller
      */
     public function show(Customer $customer)
     {
+        $includeTagihan = request()->query('includeTagihan');
+
+        if ( $includeTagihan ) {
+            return new CustomerResource($customer->loadMissing('tagihan'));
+        }
+
         return new CustomerResource($customer);
     }
 
@@ -80,9 +75,9 @@ class CustomerController extends Controller
      * @param  \App\Models\Customer  $customer
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Customer $customer)
+    public function update(UpdateCustomerRequest $request, Customer $customer)
     {
-        //
+        $customer->update($request->all());
     }
 
     /**
@@ -93,6 +88,6 @@ class CustomerController extends Controller
      */
     public function destroy(Customer $customer)
     {
-        //
+        $customer->delete();
     }
 }

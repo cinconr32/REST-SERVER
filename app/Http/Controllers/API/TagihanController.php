@@ -4,10 +4,12 @@ namespace App\Http\Controllers\API;
 
 use App\Models\Tagihan;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use App\Http\Resources\TagihanCollection;
-use App\Http\Resources\TagihanResource;
 use App\Filters\TagihanFilter;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\TagihanResource;
+use App\Http\Resources\TagihanCollection;
+use App\Http\Requests\StoreTagihanRequest;
+use App\Http\Requests\UpdateTagihanRequest;
 
 class TagihanController extends Controller
 {
@@ -34,9 +36,9 @@ class TagihanController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreTagihanRequest $request)
     {
-        //
+        return new TagihanResource(Tagihan::create($request->all()));
     }
 
     /**
@@ -57,9 +59,9 @@ class TagihanController extends Controller
      * @param  \App\Models\Tagihan  $tagihan
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Tagihan $tagihan)
+    public function update(UpdateTagihanRequest $request, Tagihan $tagihan)
     {
-        //
+        $tagihan->update($request->all());
     }
 
     /**
@@ -70,6 +72,6 @@ class TagihanController extends Controller
      */
     public function destroy(Tagihan $tagihan)
     {
-        //
+        $tagihan->delete();
     }
 }

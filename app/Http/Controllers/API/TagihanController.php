@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\API;
 
 use App\Models\Tagihan;
+use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use App\Filters\TagihanFilter;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\BulkStoreRequest;
 use App\Http\Resources\TagihanResource;
 use App\Http\Resources\TagihanCollection;
 use App\Http\Requests\StoreTagihanRequest;
@@ -39,6 +41,22 @@ class TagihanController extends Controller
     public function store(StoreTagihanRequest $request)
     {
         return new TagihanResource(Tagihan::create($request->all()));
+    }
+
+     /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function bulkStore(BulkStoreRequest $request)
+    {
+        $bulk = collect($request->all())->map(function($arr, $key)
+        {
+            return Arr::except($arr, ['customerId', 'tanggalBayar']);
+        });
+
+        Tagihan::insert($bulk->toArray());
     }
 
     /**

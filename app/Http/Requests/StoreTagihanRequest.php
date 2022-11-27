@@ -25,11 +25,11 @@ class StoreTagihanRequest extends FormRequest
     public function rules()
     {
         return [
-            'customer_id' => 'required|numeric',
+            'customer_id' => 'required|integer',
             'jenis' => ['required', Rule::in(['Internet', 'PDAM', 'Listrik'])],
             'jumlah' => 'required|numeric',
             'status' => ['required', Rule::in(['Terbayar', 'Belum Bayar'])],
-            'tanggal_bayar' =>'sometimes|required|date'
+            'tanggal_bayar' =>'date|nullable'
         ];
     }
 

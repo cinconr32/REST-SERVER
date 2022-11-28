@@ -12,6 +12,13 @@ class UpdateTagihanRequest extends FormRequest
      *
      * @return bool
      */
+    public function authorize()
+    {
+        $user = $this->user();
+
+        return $user !== null && $user->tokenCan('update');
+    }
+    
     public function rules()
     {
         $method = $this->method();

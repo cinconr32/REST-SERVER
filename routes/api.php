@@ -20,7 +20,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::group(['prefix' => 'test', 'namespace' => 'App\Http\Controllers\API'], function() {
+Route::group(['prefix' => 'test', 'namespace' => 'App\Http\Controllers\API', 'middleware' => 'auth:sanctum'], function() {
     Route::apiResource('customer', CustomerController::class);
     Route::apiResource('tagihan', TagihanController::class);
     Route::post('tagihan/bulk', [TagihanController::class, 'bulkStore']);

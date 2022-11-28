@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,3 +17,24 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+// **Create Token Testing
+// 
+// Route::get('/setup', function() {
+//     $credentials = [
+//         'email' => 'admin@admin.com',
+//         'password' => 'password'
+//     ];
+
+//     if ( Auth::attempt($credentials) ) {
+//         $user = Auth::user();
+
+//         $adminToken = $user->createToken('admin-token', ['create', 'update', 'delete']);
+//         $basicToken = $user->createToken('basic-token', ['none']);
+
+//         return [
+//             'admin' => $adminToken->plainTextToken,
+//             'basic' => $basicToken->plainTextToken
+//         ];
+//     }
+// });

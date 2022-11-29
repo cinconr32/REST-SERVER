@@ -1,7 +1,9 @@
 <?php
 
+use App\Models\PersonalAccessToken;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,23 +20,15 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-// **Create Token Testing
-// 
-// Route::get('/setup', function() {
-//     $credentials = [
-//         'email' => 'admin@admin.com',
-//         'password' => 'password'
-//     ];
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
 
-//     if ( Auth::attempt($credentials) ) {
-//         $user = Auth::user();
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::post('/token', [ProfileController::class, 'token'])->name('profile.token');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
 
-//         $adminToken = $user->createToken('admin-token', ['create', 'update', 'delete']);
-//         $basicToken = $user->createToken('basic-token', ['none']);
-
-//         return [
-//             'admin' => $adminToken->plainTextToken,
-//             'basic' => $basicToken->plainTextToken
-//         ];
-//     }
-// });
+require __DIR__.'/auth.php';

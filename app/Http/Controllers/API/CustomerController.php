@@ -86,8 +86,11 @@ class CustomerController extends Controller
      * @param  \App\Models\Customer  $customer
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Customer $customer)
+    public function destroy(Request $request, Customer $customer)
     {
-        $customer->delete();
+        if ( $request->user()->tokenCan('delete') )
+        {
+            $customer->delete();
+        }
     }
 }

@@ -88,8 +88,11 @@ class TagihanController extends Controller
      * @param  \App\Models\Tagihan  $tagihan
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Tagihan $tagihan)
+    public function destroy(Request $request, Tagihan $tagihan)
     {
-        $tagihan->delete();
+        if ( $request->user()->tokenCan('delete') )
+        {
+            $tagihan->delete();
+        }
     }
 }
